@@ -311,6 +311,11 @@
     }
     </script>
     <script>
+        window.addEventListener("keydown", () => {
+            document.getElementById("urlbar").focus()
+        })
+    </script>
+    <script>
         // redirect based on backend choice
         window.onload = () => {
                 if (localStorage.getItem("breeze_backend") === "scramjet") {
@@ -350,42 +355,8 @@
         }
     </script>
     <script>
-        "use strict";
-            /**
-             *
-             * @param {string} input
-             * @param {string} template Template for a search query.
-             * @returns {string} Fully qualified URL
-             */
-            function search(input, template) {
-                try {
-                    // input is a valid URL:
-                    // eg: https://example.com, https://example.com/test?q=param
-                    return new URL(input).toString();
-                } catch (err) {
-                    // input was not a valid URL
-                }
-
-                try {
-                    // input is a valid URL when http:// is added to the start:
-                    // eg: example.com, https://example.com/test?q=param
-                    const url = new URL(`https://${input}`);
-                    // only if the hostname has a TLD/subdomain
-                    if (url.hostname.includes(".")) return url.toString();
-                } catch (err) {
-                    // input was not valid URL
-                }
-
-                // input may have been a valid URL, however the hostname was invalid
-
-                // Attempts to convert the input to a fully qualified URL have failed
-                // Treat the input as a search query
-                if (template) return template.replace("%s", encodeURIComponent(input));
-            }
-    </script>
-    <script>
         const address = document.getElementById("urlbar")
-        const searchEngine = "https://google.com/search?q="
+        const searchEngine = localStorage.getItem("breeze_se") || "https://google.com/search?q="
         let tabFrame
 
         const CONFIG = {
@@ -417,7 +388,16 @@
 
                 if (!address) return
                 
-                const url = search(document.getElementById("urlbar").value, searchEngine.value);
+                let url = document.getElementById("urlbar").value;
+
+                if (!url.includes(".") || url.includes(" ")) {
+                    url = searchEngine + url
+                } else {
+                    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                        url = "https://" + url
+                    }
+                }
+
                 console.log("recieved submission:", url)
 
                 let w = wispUrl
