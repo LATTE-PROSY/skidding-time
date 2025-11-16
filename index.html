@@ -12,6 +12,7 @@
     <script src="/baremux/index.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="/assets/js/t.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@widgetbot/html-embed"></script>
     <script src="/sj/scramjet.all.js"></script>
     <link rel="stylesheet" href="/styles/index.css">
     <link rel="stylesheet" href="/fa/css/all.css">
@@ -235,9 +236,9 @@
                     <i class="fas fa-clapperboard"></i>
                 </a>
             </li>
-            <li class="disabled">
-                <a onclick="navTo('social')" href="#" data-page="social">
-                    <i class="fas fa-users"></i>
+            <li>
+                <a onclick="toggleChat()" href="#" data-page="social">
+                    <i class="fas fa-messages"></i>
                 </a>
             </li>
             <li class="toright" style="margin-right: 60px;" id="auth-section">
@@ -262,7 +263,7 @@
         <br>
         <div class="searchathome">
             <i class="fas fa-search"></i>
-            <input id="homesearch" style="margin-right: -3%;" type="text" placeholder="search anything..." />
+            <input id="homesearch" autocomplete="off" style="margin-right: -3%;" type="text" placeholder="search anything..." />
         </div>
         <br><br>
     </div>
@@ -286,91 +287,6 @@
             <button onclick="handleSignOut()" id="signout-btn" class="auth-button signout-button">Sign Out</button>
         </div>
     </div>
-
-    <style>
-        .auth-container {
-            background: rgb(10 10 10);
-            border-radius: 25px;
-            color: white;
-            width: 400px;
-            height: auto;
-            position: fixed;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 50;
-            transition: 0.25s;
-            padding: 30px;
-            transform-origin: center center;
-            filter: drop-shadow(0 0 15px black);
-        }
-
-        .auth-container h2 {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: white;
-        }
-
-        .auth-input {
-            width: 100%;
-            padding: 12px 16px;
-            margin-bottom: 15px;
-            background: #1d1d1d;
-            border: 1px solid #333;
-            border-radius: 12px;
-            color: white;
-            font-size: 14px;
-            font-family: lexend;
-            transition: 0.2s;
-            box-sizing: border-box;
-        }
-
-        .auth-input:focus {
-            outline: none;
-            background: #2d2d2d;
-            border-color: #555;
-        }
-
-        .auth-button {
-            width: 100%;
-            padding: 12px;
-            background: rgb(40 40 40);
-            border: none;
-            border-radius: 12px;
-            color: white;
-            font-size: 14px;
-            font-family: lexend;
-            cursor: pointer;
-            transition: 0.2s;
-            margin-bottom: 10px;
-        }
-
-        .auth-button:hover {
-            background: rgb(50 50 50);
-        }
-
-        .auth-toggle-text {
-            color: #888;
-            font-size: 14px;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.2s;
-            margin-bottom: 15px;
-        }
-
-        .auth-toggle-text:hover {
-            color: #aaa;
-        }
-
-        .signout-button {
-            display: none;
-            background: rgb(60 20 20);
-        }
-
-        .signout-button:hover {
-            background: rgb(80 30 30);
-        }
-    </style>
 
     <div class="settings-container settings-hidden">
         <div class="container">
@@ -507,6 +423,10 @@
         <div
             class="apps-container h-[83%] overflow-y-scroll w-[475px] flex flex-wrap w-7/8 absolute left-1/2 translate-x-[-50%] justify-center">
         </div>
+    </div>
+
+    <div class="chat-container settings-hidden">
+        <widgetbot server="1439475183294611590" channel="1439475383865966652" width="595px" height="46.45vh" style="border-radius: 25px;"></widgetbot>
     </div>
 
     <div class="dashboard-container settings-hidden">
@@ -762,6 +682,8 @@
 
         const appsHolder = document.querySelector(".apps-wrapper")
 
+        const chatHolder = document.querySelector(".chat-container")
+
         const general = document.querySelector("#settings-general")
         const cloaking = document.querySelector("#settings-cloaking")
         const proxy = document.querySelector("#settings-proxy")
@@ -789,8 +711,9 @@
 
         function toggleSettings() {
             if (settingsHolder.classList.contains("settings-hidden")) {
-                if (appsHolder.classList.contains("settings-shown")) {
+                if (appsHolder.classList.contains("settings-shown") || chatHolder.classList.contains("settings-shown")) {
                     toggleApps()
+                    toggleChat()
                 }
                 const newBlurOverlay = document.createElement("div")
                 newBlurOverlay.classList.add("blurOverlay")
@@ -806,8 +729,9 @@
         }
         function toggleApps() {
             if (appsHolder.classList.contains("settings-hidden")) {
-                if (settingsHolder.classList.contains("settings-shown")) {
+                if (settingsHolder.classList.contains("settings-shown") || chatHolder.classList.contains("settings-shown")) {
                     toggleSettings()
+                    toggleChat()
                 }
                 const newBlurOverlay = document.createElement("div")
                 newBlurOverlay.classList.add("blurOverlay")
@@ -821,6 +745,25 @@
                 newBlurOverlay.remove()
             }
         }
+
+        function toggleChat() {
+                if (chatHolder.classList.contains("settings-hidden")) {
+                    if (settingsHolder.classList.contains("settings-shown") || appsHolder.classList.contains("settings-shown")) {
+                        toggleSettings()
+                        toggleApps()
+                    }
+                    const newBlurOverlay = document.createElement("div")
+                    newBlurOverlay.classList.add("blurOverlay")
+                    document.body.appendChild(newBlurOverlay)
+                    chatHolder.classList.remove("settings-hidden")
+                    chatHolder.classList.add("settings-shown")
+                } else {
+                    chatHolder.classList.remove("settings-shown")
+                    chatHolder.classList.add("settings-hidden")
+                    const newBlurOverlay = document.querySelector(".blurOverlay")
+                    newBlurOverlay.remove()
+                }
+            }
     </script>
     <script>
         let searchE
