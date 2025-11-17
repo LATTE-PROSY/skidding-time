@@ -81,9 +81,9 @@
 
         async function getUser() {
             try {
-                const { data: { user }, error } = await window.supabase.auth.getUser();
+                const { data: { session }, error } = await window.supabase.auth.getSession();
                 if (error) throw error;
-                return user;
+                return session?.user || null;
             } catch (error) {
                 console.error('Get user error:', error);
                 return null;
@@ -250,16 +250,10 @@
             await checkAuth();
         });
 
-        window.supabase.auth.onAuthStateChange(async (event, session) => {
+        window.supabase.auth.onAuthStateChange((event, session) => {
             console.log('Auth state changed:', event, session);
-    
-            if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
-                await checkAuth();
-            } else if (event === 'SIGNED_OUT') {
-                document.querySelector("#auth-section i")?.classList.replace("fa-user-check", "fa-user");
-                document.getElementById("signout-btn").style.display = "none";
-                const authBtn = document.querySelector("#auth-section a");
-                authBtn?.setAttribute("onclick", "toggleAuth()");
+            if (event === 'SIGNED_IN') {
+                checkAuth();
             }
         });
     </script>
@@ -345,6 +339,7 @@
             <p onclick="toggleAuthMode()" class="auth-toggle-text">
                 <span id="auth-toggle">Need an account? Sign up</span>
             </p>
+            <p>There is a bug where a new account will break after 1-2 hours. We are actively trying to fix the bug.</p>
             <button onclick="handleSignOut()" id="signout-btn" class="auth-button signout-button">Sign Out</button>
         </div>
     </div>
