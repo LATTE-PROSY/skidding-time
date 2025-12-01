@@ -37,6 +37,9 @@ now for deployment
 [![Deploy to Render](https://binbashbanana.github.io/deploy-buttons/buttons/remade/render.svg)](https://render.com/deploy?repo=https://github.com/x8rr/cherri)
 [![Deploy to Cyclic](https://binbashbanana.github.io/deploy-buttons/buttons/remade/cyclic.svg)](https://app.cyclic.sh/api/app/deploy/x8rr/cherri)
 
+> [!IMPORTANT]
+> to deploy to cloudflare pages, see [this alternate repo](https://github.com/x8rr/cherri-cloudflare) for a deployable version. this repo does not include classplay store files, as they don't fit in cloudflare's 25 mb limit.
+
 #### method 2: deploying locally
 
 to get started, run the following command:
