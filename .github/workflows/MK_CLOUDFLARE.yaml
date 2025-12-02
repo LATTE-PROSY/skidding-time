@@ -2,7 +2,7 @@ name: Make Cloudflare Deployable Repo
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   push-clean:
