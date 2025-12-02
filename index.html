@@ -47,15 +47,15 @@
 <body>
     <nav>
         <ul>
-            <li style="width: 95px;">
+            <li style="width: 40px;">
                 <a onclick="navTo('home')" style="margin-top: 7.5px; margin-left: 10px;" href="#" data-page="home">
                     <div class="hcontainer">
-                        <img src="/assets/img/fav.png" style="height: 24px; margin-top: -1px; margin-right: 4px;"
+                        <img src="/assets/img/fav.png" style="height: 24px; margin-top: -1px; margin-right: -0px;"
                             alt="">
-                        <p>cherri</p>
                     </div>
                 </a>
             </li>
+            <li class="divider"></li>
             <li>
                 <a onclick="toggleGames()" href="#" data-page="games">
                     <i class="fas fa-gamepad-modern"></i>
@@ -72,10 +72,11 @@
                 </a>
             </li>
             <li>
-                <a onclick="navTo('vms')" href="#" data-page="vms">
+                <a onclick="navTo('vms'); showToast('success', 'VMs are still in beta! Report bugs on the repo/Discord.', 'fas fa-exclamation-triangle')" href="#" data-page="vms">
                     <i class="fas fa-computer"></i>
                 </a>
             </li>
+            <li class="divider"></li>
             <li>
                 <a onclick="togglePartners()" href="#" data-page="movies">
                     <i class="fas fa-handshake-simple"></i>
@@ -88,12 +89,12 @@
                 </a>
             </li>
             -->
-            <li class="toright" style="right: 60px;">
+            <li>
                 <a onclick="toggleSettings()" href="#" data-page="dc">
                     <i class="fas fa-cog"></i>
                 </a>
             </li>
-            <li class="toright">
+            <li>
                 <a target="_blank" href="https://discord.gg/hUYzETaQ9U" data-page="settings">
                     <i class="fa-brands fa-discord"></i>
                 </a>
@@ -109,8 +110,11 @@
         <br>
         <div class="searchathome">
             <i class="fas fa-search"></i>
-            <input id="homesearch" autocomplete="off" style="margin-right: -3%;" type="text"
-                placeholder="search anything..." />
+            <input id="homesearch" disabled autocomplete="off" style="margin-right: -3%;" type="text"
+                placeholder="search not ready yet!" />
+            <svg viewBox="25 25 50 50" class="loading">
+                <circle r="20" cy="50" cx="50"></circle>
+            </svg>
         </div>
         <br><br>
     </div>
@@ -421,21 +425,21 @@
         <br>
         <h1 style="text-align: center; font-size: 35px; color: var(--bright-text); font-weight: 500;">Partners</h1>
         <br>
-        <p align="center">No partners yet.</p>
-        <div
-            class="partner-container h-[83%] overflow-y-scroll w-[475px] flex flex-wrap w-7/8 absolute left-1/2 translate-x-[-50%] justify-center">
-            <!--
-            <a href="https://prism.onl/" target="_blank">
-                <div class="app">
-                    <div class="bg-img" style="background: url('/assets/img/partners/prism.png');"></div>
-                    <div class="app-title-cont">
-                        <h2 class="app-title-h2">Prism</h2>
+        <div class="partner-container h-[83%] overflow-y-scroll w-[475px] flex flex-wrap w-7/8 absolute left-1/2 translate-x-[-50%] justify-center">
+            <a href="https://prism.onl/" target="_blank" class="app partner-square">
+                <div class="bg-img" style="background: url('/assets/img/partners/prism.png');"></div>
+                <div class="app-title-cont">
+                    <h2 class="app-title-h2">Prism</h2>
                 </div>
             </a>
-            -->
+            
+            <a href="https://github.com/Galaxy-Vortex/" target="_blank" class="app partner-square">
+                <div class="bg-img" style="background: url('/assets/img/partners/hydra.png');"></div>
+                <div class="app-title-cont">
+                    <h2 class="app-title-h2">Hydra Network</h2>
+                </div>
+            </a>
         </div>
-    </div>
-    <br>
     </div>
 
     <button id="reset-theme" onclick="resetTheme()">CLICK HERE TO RESET YOUR THEME!</button>
@@ -550,6 +554,13 @@
                     console.log("Error registering service worker (SJ): " + e)
                     showToast("error", "Failed to register service worker", "fas fa-times-circle")
                 });
+
+                setTimeout(() => {
+                    document.querySelector(".loading").style.opacity = 0
+                    document.querySelector(".loading").style.pointerEvents = "none"
+                    document.querySelector("#homesearch").disabled = false
+                    document.querySelector("#homesearch").placeholder = "search anything..."
+                }, 1000)
             }
         }
 
